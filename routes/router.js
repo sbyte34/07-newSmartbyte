@@ -9,18 +9,26 @@ const thane = require("../models/thane");
 const routes = express.Router()
 
 routes.get("/", async (req, res) => {
-    const slides = await Sliderschema.find()
-    const br_name = await branch.find()
-
-
-
-    res.render("index", {
-        slides: slides,
-        br_name: br_name,
-
-
-
-    });
+    // const slides = await Sliderschema.find()
+    // const br_name = await branch.find()
+    // res.render("index", {
+    //     slides: slides,
+    //     br_name: br_name,
+    // });
+    try {
+        const slides = await Sliderschema.find().maxTimeMS(30000);
+        const br_name = await branch.find().maxTimeMS(30000);
+    
+        res.render("index", {
+            slides: slides,
+            br_name: br_name,
+        });
+    } catch (error) {
+        console.error("An error occurred:", error);
+        // Handle the error and send an appropriate response to the client
+        res.status(500).send("Internal Server Error");
+    }
+    
 });
 
 routes.get("/details/:id", async (req, res) => {
